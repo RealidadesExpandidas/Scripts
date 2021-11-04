@@ -27,3 +27,68 @@ public bool izquierda = false;
         
     }
 }
+
+Script que lee las colisiones de las dos manos
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DeteccionColisionManos : MonoBehaviour
+{
+    // Start is called before the first frame update
+
+    public ManoL manoL;
+    public ManoR manoR;
+    int contacto = 0;
+    int cambio = 0;
+    public GameObject macaco;
+
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(manoL.izquierda & manoR.derecha & contacto== 0){
+            print("Hola");
+            //macaco.GetComponent<Renderer>().material.color = Color.red;
+            contacto= 1;
+            cambio = cambio + 1;
+            print(cambio);
+                switch (cambio)
+                    {
+                    case 5:
+                       
+                        break;
+                    case 4:
+                      
+                        macaco.GetComponent<Renderer>().material.color = Color.red;
+                        break;
+                    case 3:
+                        
+                        macaco.GetComponent<Renderer>().material.color = Color.black;
+                        break;
+                    case 2:
+                      
+                        macaco.GetComponent<Renderer>().material.color = Color.green;
+                        break;
+                    case 1:
+                    macaco.GetComponent<Renderer>().material.color = Color.blue;
+                       
+                        break;
+                    default:
+                        
+                        break;
+                    }
+        }
+        if(!manoL.izquierda & !manoR.derecha ){
+            macaco.GetComponent<Renderer>().material.color = Color.white;
+            contacto= 0;
+        }
+    }
+}
+
+
