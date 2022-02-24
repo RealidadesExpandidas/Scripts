@@ -1,0 +1,155 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class ControlMecanimTouch : MonoBehaviour
+{
+    // Start is called before the first frame update
+
+    public ManoL manoL;
+    public ManoR manoR;
+    int contacto = 0;
+    int cambio = 0;
+    int prevcontacto = 0;
+    public GameObject macaco;
+    public GameObject macacoColor;
+    public TextMeshProUGUI text1; 
+    public TextMeshProUGUI text2; 
+    public TextMeshProUGUI text3;
+    public TextMeshProUGUI text4;
+    public TextMeshProUGUI text5;
+    public Animator macaco_animator;
+    private float prevSpeed;
+    private int contador_contacto = 0;
+    public GameObject mano_d_avatar;
+    public GameObject mano_i_avatar;
+    public GameObject mano_d_fruidor;
+    public GameObject mano_i_fruidor;
+    private float dist_mano_d = 0;
+    private float dist_mano_i = 0;
+    private float distancia_manos = 0;
+    private float map_dist_vel = 0;
+    private int trans_1 = 0;
+    private int trans_2 = 0;
+    private int trans_3 = 0;
+    private int trans_4 = 0;
+
+    void Start()
+    {
+        text1 = GameObject.Find("text1").GetComponent<TextMeshProUGUI>();
+        text2 = GameObject.Find("text2").GetComponent<TextMeshProUGUI>();
+        text3 = GameObject.Find("text3").GetComponent<TextMeshProUGUI>();
+        text4 = GameObject.Find("text4").GetComponent<TextMeshProUGUI>();
+        text5 = GameObject.Find("text5").GetComponent<TextMeshProUGUI>();
+        macaco_animator = macaco.GetComponent<Animator>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    // DETECCION CAMBIO EN COLLISION
+        if(manoL.izquierda & manoR.derecha & contacto == 0)
+        {
+            contacto= 1;
+        }
+
+        if(!manoL.izquierda & !manoR.derecha)
+        {
+            contacto= 0;
+        }
+
+         if (prevcontacto != contacto && prevcontacto == 0)
+         {
+             cambio = 1;
+             //macaco.GetComponent<Renderer>().material.color = Color.red;
+         } 
+
+         else 
+         {
+             cambio = 0;
+         }
+         
+    
+        prevcontacto = contacto;
+
+        if (cambio == 1)
+        {
+            contador_contacto ++;
+            if (contador_contacto > 4){ contador_contacto = 1; }
+            //macaco_animator.SetFloat("contador_contacto", contador_contacto);
+
+            switch(contador_contacto)
+            {
+                case 1: 
+                        trans_1 = 1;
+                        trans_2 = 0;
+                        trans_3 = 0;
+                        trans_4 = 0;
+                        macacoColor.GetComponent<Renderer>().material.color = Color.red;
+                break;
+
+                case 2: 
+                        trans_1 = 0;
+                        trans_2 = 1;
+                        trans_3 = 0;
+                        trans_4 = 0;
+                        macacoColor.GetComponent<Renderer>().material.color = Color.blue;
+                break;
+
+                case 3: 
+                        trans_1 = 0;
+                        trans_2 = 0;
+                        trans_3 = 1;
+                        trans_4 = 0;
+                        macacoColor.GetComponent<Renderer>().material.color = Color.green;
+                break;
+
+                case 4: 
+                        trans_1 = 0;
+                        trans_2 = 0;
+                        trans_3 = 0;
+                        trans_4 = 1;
+                        macacoColor.GetComponent<Renderer>().material.color = Color.yellow;
+                break;
+
+            }
+
+            macaco_animator.SetInteger("trans_1", trans_1);
+            macaco_animator.SetInteger("trans_2", trans_2);
+            macaco_animator.SetInteger("trans_3", trans_3);
+            macaco_animator.SetInteger("trans_4", trans_4);
+        }
+    // FIN DETECCION CAMBIO EN COLLISION
+
+
+
+    //DISTANCIA MANOS COMO CONTROL DE VELOCIDAD EN ANIMATOR
+    dist_mano_d = Vector3.Distance(mano_d_avatar.GetComponent<Transform>().position, mano_d_fruidor.GetComponent<Transform>().position);
+
+    dist_mano_i = Vector3.Distance(mano_i_avatar.GetComponent<Transform>().position, mano_i_fruidor.GetComponent<Transform>().position);
+
+    distancia_manos = dist_mano_d + dist_mano_i / 2;
+
+    map_dist_vel =  map(distancia_manos, 2, 0, 1, 0);
+
+    macaco_animator.speed = map_dist_vel;
+
+    //FIN DISTANCIA MANOS
+
+    
+    //PRINTS
+        text1.SetText("Cambio : " + cambio.ToString());
+        text2.SetText("contacto : " + contacto.ToString());
+        text3.SetText("Contador Contacto: " + contador_contacto.ToString());
+        text4.SetText("distancia manos : "+ distancia_manos.ToString());
+        text5.SetText("velocidad animator : " + macaco_animator.speed.ToString());
+    //FIN PRINTS
+
+    }
+
+    float map(float s, float a1, float a2, float b1, float b2)
+    {
+        return b1 + (s-a1)*(b2-b1)/(a2-a1);
+    }
