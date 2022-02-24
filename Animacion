@@ -33,4 +33,5 @@ public class Animacion : MonoBehaviour
          Debug.Log ("bb  "+luzZ);
          AnimX.SetFloat(Blend, (luzX));
     }
+    
 }
