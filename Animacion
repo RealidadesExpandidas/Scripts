@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Animacion : MonoBehaviour
+{
+    // Start is called before the first frame update
+[Header ("Controladores")]
+    public GameObject controlador;
+    public GameObject controlador2;
+[Header ("Personaje")]
+    public GameObject macaco2;
+    private Animator AnimX;
+
+    [Header ("Nombre de BlendTree")]
+    
+    public string Blend;
+
+    float luzX;
+    float luzZ;
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+         AnimX = macaco2.GetComponent<Animator>();
+         luzX = controlador.GetComponent<Transform>().localPosition.x;
+         luzZ = controlador.GetComponent<Transform>().localPosition.z;
+         //luzX= controlador.position.x;
+         Debug.Log ("bb  "+luzZ);
+         AnimX.SetFloat(Blend, (luzX));
+    }
+}
