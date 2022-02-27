@@ -13,6 +13,9 @@ public class ControlMecanimTouch : MonoBehaviour
     //public ManoL manoLGestoEmpujar;
     //public ManoR manoRGestoEmpujar;
 
+    public ManoLSubir subirL;
+    public ManoRSubir subirR;
+
 [Header ("Macaco")]
     
     public GameObject macaco;
@@ -29,6 +32,7 @@ public class ControlMecanimTouch : MonoBehaviour
     public TextMeshProUGUI text4;
     public TextMeshProUGUI text5;
     public TextMeshProUGUI text6;
+    public TextMeshProUGUI text7;
     public TextMeshPro textMensajes;
 
     public Animator macaco_animator;
@@ -57,6 +61,9 @@ public class ControlMecanimTouch : MonoBehaviour
     int empujar = 0;
     int mensajes = 1;
 
+    float alturaR;
+    float alturaL;
+
     void Start()
     {
         text1 = GameObject.Find("text1").GetComponent<TextMeshProUGUI>();
@@ -64,6 +71,7 @@ public class ControlMecanimTouch : MonoBehaviour
         text3 = GameObject.Find("text3").GetComponent<TextMeshProUGUI>();
         text4 = GameObject.Find("text4").GetComponent<TextMeshProUGUI>();
         text5 = GameObject.Find("text5").GetComponent<TextMeshProUGUI>();
+        text7 = GameObject.Find("text7").GetComponent<TextMeshProUGUI>();
         macaco_animator = macaco.GetComponent<Animator>();
         hombro.SetActive(false);
     }
@@ -101,7 +109,35 @@ if(hombroR.derecha  & mensajes == 4)
            macaco_animator.speed = 0;
         }
 
+if(alturaR > 1.8 & alturaR > 1.8 & distancia_manos < 0.5 & mensajes == 5)
+        {
+            //mensajes = 6;
+            //cercano2.SetActive(false);
+            Vector3 Target = macaco.GetComponent<Transform>().position;
+            Vector3 Target2 =  new Vector3(0, 2, 0);
+           
+           macacoColor.GetComponent<Renderer>().material.color = Color.yellow;
+           macaco.transform.position = Vector3.MoveTowards(macaco.transform.position, Target2, 1f * Time.deltaTime);
+           if(macaco.transform.position == Target2){
+               mensajes = 6;
+           }
+           //macaco.transform.position = mano_d_fruidor.GetComponent<Transform>().position;
+        }
 
+        if(alturaR < 0.8 & alturaR < 0.8 & distancia_manos < 0.5 & mensajes == 6)
+        {
+            //mensajes = 6;
+            //cercano2.SetActive(false);
+            //Vector3 Target = macaco.GetComponent<Transform>().position;
+            Vector3 Target = new Vector3(0, 0, 0);
+            
+           macacoColor.GetComponent<Renderer>().material.color = Color.red;
+           macaco.transform.position = Vector3.MoveTowards(macaco.transform.position, Target, 1f * Time.deltaTime);
+           if(macaco.transform.position == Target){
+               mensajes = 7;
+           }
+           //macaco.transform.position = mano_d_fruidor.GetComponent<Transform>().position;
+        }
 
 
         /*Gesto empujar
@@ -197,6 +233,10 @@ if(hombroR.derecha  & mensajes == 4)
 
     dist_mano_i = Vector3.Distance(mano_i_avatar.GetComponent<Transform>().position, mano_i_fruidor.GetComponent<Transform>().position);
 
+//Altura de las manos
+    alturaR = mano_d_fruidor.GetComponent<Transform>().position.y;
+    alturaL = mano_i_fruidor.GetComponent<Transform>().position.y;
+
     distancia_manos = dist_mano_d + dist_mano_i / 2;
     //distancia_manos = dist_mano_d + dist_mano_i;
 
@@ -216,6 +256,7 @@ if( mensajes !=5){
         text4.SetText("distancia manos : "+ distancia_manos.ToString());
         text5.SetText("velocidad animator : " + macaco_animator.speed.ToString());
         text6.SetText("contacto : " + empujar.ToString());
+        text7.SetText("alturaR : " + alturaR.ToString());
         
         //Mensajes para el usuario
 
@@ -235,7 +276,10 @@ if( mensajes !=5){
                 textMensajes.SetText("Toca el hombro");
                 break;
                 case 5:
-                textMensajes.SetText("ups");
+                textMensajes.SetText("Levanta las manos");
+                break;
+                case 6:
+                textMensajes.SetText("baja las manos");
                 break;
                 }
     //FIN PRINTS
