@@ -6,15 +6,15 @@ using TMPro;
 public class ControlMecanimTouch : MonoBehaviour
 {
     // Start is called before the first frame update
-[Header ("GestoDosManos")]
+[Header ("GestoDosManos - Avatar")]
     public ManoL manoL;
     public ManoR manoR;
-
+[Header ("GestoDosManos")]
     //public ManoL manoLGestoEmpujar;
     //public ManoR manoRGestoEmpujar;
 
-    public ManoLSubir subirL;
-    public ManoRSubir subirR;
+    public ManoLSubir empujarL;
+    public ManoRSubir empujarR;
 
 [Header ("Macaco")]
     
@@ -24,6 +24,7 @@ public class ControlMecanimTouch : MonoBehaviour
     public GameObject cercano2;
     public GameObject hombro;
     public ManoR hombroR;
+    public GameObject cabeza;
 
   [Header ("Mensajes")]  
     public TextMeshProUGUI text1; 
@@ -36,7 +37,7 @@ public class ControlMecanimTouch : MonoBehaviour
     public TextMeshPro textMensajes;
 
     public Animator macaco_animator;
-   
+   [Header ("ManoGameObject")]
     public GameObject mano_d_avatar;
     public GameObject mano_i_avatar;
     public GameObject mano_d_fruidor;
@@ -63,6 +64,8 @@ public class ControlMecanimTouch : MonoBehaviour
 
     float alturaR;
     float alturaL;
+    float lejosR;
+    float lejosL;
 
     void Start()
     {
@@ -87,7 +90,7 @@ if(cercano.izquierda  & mensajes == 1)
             cercano2.SetActive(false);
         }
 
-        //Extender los brazos
+//Extender los brazos
 if(distancia_manos > 1.2  & mensajes == 2)
         {
             mensajes = 3;
@@ -95,20 +98,21 @@ if(distancia_manos > 1.2  & mensajes == 2)
             //hombro.SetActive(true);
         }
 
+//Tocar manos
  if(contacto == 1  & mensajes == 3)
         {
             mensajes = 4;
             //cercano2.SetActive(false);
             hombro.SetActive(true);
         }
-
+//Tocar hombro
 if(hombroR.derecha  & mensajes == 4)
         {
             mensajes = 5;
             //cercano2.SetActive(false);
            macaco_animator.speed = 0;
         }
-
+//Tocar subir brazos
 if(alturaR > 1.8 & alturaR > 1.8 & distancia_manos < 0.5 & mensajes == 5)
         {
             //mensajes = 6;
@@ -123,7 +127,7 @@ if(alturaR > 1.8 & alturaR > 1.8 & distancia_manos < 0.5 & mensajes == 5)
            }
            //macaco.transform.position = mano_d_fruidor.GetComponent<Transform>().position;
         }
-
+//Bajar brazos
         if(alturaR < 0.8 & alturaR < 0.8 & distancia_manos < 0.5 & mensajes == 6)
         {
             //mensajes = 6;
@@ -139,6 +143,21 @@ if(alturaR > 1.8 & alturaR > 1.8 & distancia_manos < 0.5 & mensajes == 5)
            //macaco.transform.position = mano_d_fruidor.GetComponent<Transform>().position;
         }
 
+//Empujar
+        if(empujarL.subirL & empujarR.subirR & mensajes == 7)
+        {
+            //mensajes = 6;
+            //cercano2.SetActive(false);
+            //Vector3 Target = macaco.GetComponent<Transform>().position;
+            Vector3 Target = new Vector3(0, 0, 5);
+            
+           macacoColor.GetComponent<Renderer>().material.color = Color.green;
+           macaco.transform.position = Vector3.MoveTowards(macaco.transform.position, Target, .5f * Time.deltaTime);
+           if(macaco.transform.position == Target){
+               mensajes = 8;
+           }
+           
+        } 
 
         /*Gesto empujar
  if(manoLGestoEmpujar.izquierda & manoRGestoEmpujar.derecha & empujar == 0)
@@ -237,6 +256,10 @@ if(alturaR > 1.8 & alturaR > 1.8 & distancia_manos < 0.5 & mensajes == 5)
     alturaR = mano_d_fruidor.GetComponent<Transform>().position.y;
     alturaL = mano_i_fruidor.GetComponent<Transform>().position.y;
 
+ //Distancia Z en manos del cuerpo   
+    lejosR = mano_d_fruidor.GetComponent<Transform>().position.z- cabeza.GetComponent<Transform>().position.z;
+    lejosL = mano_i_fruidor.GetComponent<Transform>().position.z- cabeza.GetComponent<Transform>().position.z;
+
     distancia_manos = dist_mano_d + dist_mano_i / 2;
     //distancia_manos = dist_mano_d + dist_mano_i;
 
@@ -256,7 +279,7 @@ if( mensajes !=5){
         text4.SetText("distancia manos : "+ distancia_manos.ToString());
         text5.SetText("velocidad animator : " + macaco_animator.speed.ToString());
         text6.SetText("contacto : " + empujar.ToString());
-        text7.SetText("alturaR : " + alturaR.ToString());
+        text7.SetText("alturaR : " + mano_i_fruidor.GetComponent<Transform>().localPosition.ToString());
         
         //Mensajes para el usuario
 
