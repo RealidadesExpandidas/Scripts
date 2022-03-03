@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Mover : MonoBehaviour
+{
+    // Start is called before the first frame update
+
+    public GameObject macaco;
+    public GameObject mano;
+
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        float cosoX = mano.GetComponent<Transform>().position.x;
+        float cosoZ = mano.GetComponent<Transform>().position.z;
+        
+        macaco.transform.position = new Vector3(cosoX, 0f, cosoZ);
+    }
+}
